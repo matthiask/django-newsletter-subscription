@@ -1,7 +1,7 @@
 Successfully unsubscribed from our newsletter
 
 You successfully unsubscribed from our newsletter. If you want to
-subscribe again any time, just click the following link:
+subscribe again any time, just visit the following link:
 
 {{ resubscribe_url }}
 

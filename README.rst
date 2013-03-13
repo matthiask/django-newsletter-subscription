@@ -46,7 +46,22 @@ Twitter Bootstrap.
 
 1. Install ``django-newsletter-subscription`` using pip.
 
-2. Add ``newsletter_subscription`` to ``INSTALLED_APPS`` and
-   include ``newsletter_subscription.urls`` in your URLconf.
+2. Add a concrete model inheriting
+   ``newsletter_subscription.models.SubscriptionBase`` or coming with the same
+   fields somewhere in your project.
 
-3. Run ``migrate``.
+3. Add the URLconf entry::
+
+   from .newsletter.models import Subscription
+
+   from newsletter_subscription.backend import ModelBackend
+   from newsletter_subscription.urls import newsletter_subscriptions_urlpatterns
+
+   urlpatterns += patterns(
+      url(r'^newsletter/', include(newsletter_subscriptions_urlpatterns(
+          backend=ModelBackend(Subscription),
+          ))),
+   )
+
+4. Add ``newsletter_subscription`` to ``INSTALLED_APPS`` if you want to use
+   the bundled templates.

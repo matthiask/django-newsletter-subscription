@@ -1,8 +1,18 @@
+from importlib import import_module
+
+from django.conf import settings
 from django.contrib.sites.models import get_current_site
 from django.core import signing
 from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.template.loader import TemplateDoesNotExist, render_to_string
+
+
+def get_backend():
+    return import_module(getattr(settings,
+        'NEWSLETTER_SUBSCRIPTIONS_BACKEND',
+        'newsletter_subscription.backends.django_models',
+        ))
 
 
 def get_signer(salt='newsletter_subscription'):
