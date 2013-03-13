@@ -52,16 +52,16 @@ Twitter Bootstrap.
 
 3. Add the URLconf entry::
 
-   from .newsletter.models import Subscription
+       from .newsletter.models import Subscription
 
-   from newsletter_subscription.backend import ModelBackend
-   from newsletter_subscription.urls import newsletter_subscriptions_urlpatterns
+       from newsletter_subscription.backend import ModelBackend
+       from newsletter_subscription.urls import newsletter_subscriptions_urlpatterns
 
-   urlpatterns += patterns(
-      url(r'^newsletter/', include(newsletter_subscriptions_urlpatterns(
-          backend=ModelBackend(Subscription),
-          ))),
-   )
+       urlpatterns += patterns(
+          url(r'^newsletter/', include(newsletter_subscriptions_urlpatterns(
+              backend=ModelBackend(Subscription),
+              ))),
+       )
 
 4. Add ``newsletter_subscription`` to ``INSTALLED_APPS`` if you want to use
    the bundled templates.
