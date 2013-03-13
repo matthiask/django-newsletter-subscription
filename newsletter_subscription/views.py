@@ -21,14 +21,25 @@ class NewsletterForm(forms.Form):
 
     def clean(self):
         data = super(NewsletterForm, self).clean()
+        email = data.get('email')
 
-        if data.get('email') and data.get('action') == 'unsubscribe':
-            if not Subscription.objects.filter(
-                    email=data.get('email'),
-                    is_active=True,
-                    ).exists():
-                raise forms.ValidationError(
-                    _('This address is not subscribed to our newsletter.'))
+        if not email:
+            return data
+
+        action = data.get('action')
+        if (action == 'subscribe' and Subscription.objects.filter(
+                email=email,
+                is_active=True,
+                ).exists()):
+            raise forms.ValidationError(
+                _('This address is already subscribed to our newsletter.'))
+
+        elif (action == 'unsubscribe' and not Subscription.objects.filter(
+                email=email,
+                is_active=True,
+                ).exists()):
+            raise forms.ValidationError(
+                _('This address is not subscribed to our newsletter.'))
 
         return data
 
