@@ -131,6 +131,4 @@ def resubscribe(request, code):
         # Oops?
         pass
 
-    return redirect('newsletter_subscription_subscribe', kwargs={
-        'code': code,
-        })
+    return redirect('newsletter_subscription_subscribe', code=code)
