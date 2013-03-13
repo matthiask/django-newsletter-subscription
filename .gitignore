@@ -10,3 +10,4 @@
 /build
 /dist
 /django_newsletter_subscription.egg-info
+/tests/venv
