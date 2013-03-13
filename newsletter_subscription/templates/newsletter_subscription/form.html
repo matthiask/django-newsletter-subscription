@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load i18n towel_form_tags %}
+
+{% block title %}{% trans "Newsletter" %} - {{ block.super }}{% endblock %}
+
+{% block page-header %}
+<div class="page-header">
+  <h1>{% trans "Newsletter" %}</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<form action="." method="post" class="form form-horizontal">
+  {% csrf_token %}
+  {% form_errors form %}
+  {% form_item form.email %}
+  {% form_item form.action %}
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">
+      {% trans "Submit" %}</button>
+  </div>
+
+  <script>
+    document.getElementById("{{ form.email.auto_id }}").focus();
+  </script>
+</form>
+{% endblock %}

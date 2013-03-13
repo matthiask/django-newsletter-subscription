@@ -1,0 +1,7 @@
+Newsletter subscription
+
+Click the following link to confirm the newsletter subscription:
+
+{{ subscribe_url }}
+
+Warm regards
