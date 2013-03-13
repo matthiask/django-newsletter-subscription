@@ -2,6 +2,6 @@ include LICENSE
 include MANIFEST.in
 include README.rst
 include setuplib.py
-recursive-include email_registration/static *
-recursive-include email_registration/locale *
-recursive-include email_registration/templates *
+recursive-include newsletter_subscription/static *
+recursive-include newsletter_subscription/locale *
+recursive-include newsletter_subscription/templates *

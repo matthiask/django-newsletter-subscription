@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 
-urlpatterns = patterns('email_registration.views',
+urlpatterns = patterns('newsletter_registration.views',
     url(r'^$',
         'email_registration_form',
         name='email_registration_form'),
