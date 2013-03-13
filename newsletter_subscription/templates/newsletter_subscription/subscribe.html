@@ -16,11 +16,11 @@
   </p>
   {% csrf_token %}
   {% form_errors form %}
-  {% form_item form %}
+  {% form_items form %}
 
   <div class="form-actions">
     <button type="submit" class="btn btn-primary">
-      {% trans "Set password" %}</button>
+      {% trans "Save" %}</button>
   </div>
 </form>
 {% endblock %}
