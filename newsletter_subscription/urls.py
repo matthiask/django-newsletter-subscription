@@ -1,11 +1,14 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 
 
-urlpatterns = patterns('newsletter_registration.views',
-    url(r'^$',
-        'email_registration_form',
-        name='email_registration_form'),
-    url(r'^(?P<code>[^/]+)/$',
-        'email_registration_confirm',
-        name='email_registration_confirm'),
+urlpatterns = patterns('newsletter_subscription.views',
+    url(r'^$', 'form',
+        name='newsletter_subscription_form',
+        ),
+    url(r'^s/(?P<code>[^/]+)/$', 'subscribe',
+        name='newsletter_subscription_subscribe',
+        ),
+    url(r'^r/(?P<code>[^/]+)/$', 'resubscribe',
+        name='newsletter_subscription_resubscribe',
+        ),
 )
