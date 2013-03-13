@@ -60,6 +60,9 @@ def form(request, backend):
     form = NewsletterForm(request.POST or None,
         backend=backend,
         request=request,
+        initial={
+            'email': request.user.email,
+            } if request.user.is_authenticated() else None,
         )
 
     if request.method == 'POST' and form.is_valid():
