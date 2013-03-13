@@ -1,12 +1,62 @@
 from django import forms
 from django.contrib import messages
+from django.core.signing import BadSignature
 from django.shortcuts import redirect, render
 from django.utils.translation import ugettext as _, ugettext_lazy
 
-from newsletter_subscription.models import Subscription
-from newsletter_subscription.signals import subscribed, unsubscribed
 from newsletter_subscription.utils import (get_signer,
     send_subscription_mail, send_unsubscription_mail)
+
+
+### Generic API START
+
+from newsletter_subscription.models import Subscription
+
+class SubscriptionForm(forms.ModelForm):
+    class Meta:
+        model = Subscription
+        exclude = ('email', 'is_active')
+
+
+class backend(object):
+    @staticmethod
+    def is_subscribed(email):
+        return Subscription.objects.filter(
+            email=email,
+            is_active=True,
+            ).exists()
+
+    @staticmethod
+    def subscribe(email):
+        subscription, created = Subscription.objects.get_or_create(email=email)
+        if not subscription.is_active:
+            subscription.is_active = True
+            subscription.save()
+            return True
+        return False
+
+    @staticmethod
+    def unsubscribe(email):
+        try:
+            subscription = Subscription.objects.get(email=email)
+        except Subscription.DoesNotExist:
+            return
+
+        subscription.is_active = False
+        subscription.save()
+
+    @staticmethod
+    def subscription_details_form(email, request):
+        try:
+            instance = Subscription.objects.get(email=email)
+        except Subscription.DoesNotExist:
+            instance = None
+
+        if request.method == 'POST':
+            return SubscriptionForm(request.POST, instance=instance)
+        return SubscriptionForm(instance=instance)
+
+### Generic API END
 
 
 class NewsletterForm(forms.Form):
@@ -26,18 +76,12 @@ class NewsletterForm(forms.Form):
         if not email:
             return data
 
-        action = data.get('action')
-        if (action == 'subscribe' and Subscription.objects.filter(
-                email=email,
-                is_active=True,
-                ).exists()):
+        ction = data.get('action')
+        if action == 'subscribe' and backend.is_subscribed(email):
             raise forms.ValidationError(
                 _('This address is already subscribed to our newsletter.'))
 
-        elif (action == 'unsubscribe' and not Subscription.objects.filter(
-                email=email,
-                is_active=True,
-                ).exists()):
+        elif action == 'unsubscribe' and not backend.is_subscribed(email):
             raise forms.ValidationError(
                 _('This address is not subscribed to our newsletter.'))
 
@@ -57,14 +101,9 @@ def form(request):
                 messages.success(request,
                     _('You should receive a confirmation email shortly.'))
             else:
-                subscription = Subscription.objects.get(email=email)
-                subscription.is_active = False
-                subscription.save()
+                backend.unsubscribe(email)
                 send_unsubscription_mail(email, request)
                 messages.success(request, _('You have been unsubscribed.'))
-
-                unsubscribed.send(sender=Subscription,
-                    request=request, subscription=subscription)
 
             return redirect('.')
 
@@ -76,59 +115,43 @@ def form(request):
         })
 
 
-class SubscriptionForm(forms.ModelForm):
-    class Meta:
-        model = Subscription
-        exclude = ('email', 'is_active')
-
-
 def subscribe(request, code, form_class=SubscriptionForm):
-    # TODO exception handling
-    email = get_signer().unsign(code)
-    subscription, created = Subscription.objects.get_or_create(
-        email=email, defaults={'is_active': True})
-
-    if not subscription.is_active:
-        messages.success(request, _('Your subscription has been activated.'))
-        subscription.is_active = True
-        subscription.save()
-
-        subscribed.send(sender=Subscription,
-            request=request, subscription=subscription)
-
-    if form_class is None:
+    try:
+        email = get_signer().unsign(code)
+    except BadSignature:
+        messages.error(request, _('We are sorry. This link is broken.'))
         return redirect('newsletter_subscription_form')
 
-    elif form_class and request.method == 'POST':
-        form = form_class(request.POST, request.FILES, instance=subscription)
+    if backend.subscribe(email):
+        messages.success(request, _('Your subscription has been activated.'))
 
+    form = backend.subscription_details_form(email, request=request)
+    if form is None:
+        return redirect('newsletter_subscription_form')
+
+    elif request.method == 'POST':
         if form.is_valid():
             messages.success(request,
-                _('Thank you! The subscription has been updated.'))
+                _('Thank you! The subscription details have been updated.'))
             form.save()
 
             return redirect('.')
 
-    else:
-        form = form_class(instance=subscription)
-
     return render(request, 'newsletter_subscription/subscribe.html', {
-        'subscription': subscription,
+        'email': email,
         'form': form,
         })
 
 
 def resubscribe(request, code):
-    # TODO exception handling
-    email = get_signer().unsign(code)
     try:
-        subscription = Subscription.objects.get(email=email)
-        if subscription.is_active:
-            messages.info(request,
-                _('Your subscription is already active.'))
+        email = get_signer().unsign(code)
+    except BadSignature:
+        messages.error(request, _('We are sorry. This link is broken.'))
+        return redirect('newsletter_subscription_form')
 
-    except Subscription.DoesNotExist:
-        # Oops?
-        pass
+    if backend.is_subscribed(email):
+        messages.info(request,
+            _('Your subscription is already active.'))
 
     return redirect('newsletter_subscription_subscribe', code=code)
