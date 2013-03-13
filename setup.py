@@ -8,7 +8,7 @@ packages, package_data = setuplib.find_packages('newsletter_subscription')
 
 setup(name='django-newsletter-subscription',
     version=__import__('newsletter_subscription').__version__,
-    description='So simple you\'ll burst into tears right away.',
+    description='Another newsletter subscription app.',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
     author='Matthias Kestenholz',
     author_email='mk@406.ch',
