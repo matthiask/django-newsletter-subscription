@@ -17,7 +17,7 @@ class NewsletterForm(forms.Form):
     action = forms.ChoiceField(label=ugettext_lazy('action'), choices=(
         ('subscribe', _('subscribe')),
         ('unsubscribe', _('unsubscribe')),
-        ))
+        ), widget=forms.RadioSelect, initial='subscribe')
 
     def clean(self):
         data = super(NewsletterForm, self).clean()
