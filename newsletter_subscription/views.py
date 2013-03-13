@@ -76,7 +76,7 @@ class NewsletterForm(forms.Form):
         if not email:
             return data
 
-        ction = data.get('action')
+        action = data.get('action')
         if action == 'subscribe' and backend.is_subscribed(email):
             raise forms.ValidationError(
                 _('This address is already subscribed to our newsletter.'))
