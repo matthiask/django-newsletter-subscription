@@ -3,9 +3,9 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.utils.translation import ugettext as _, ugettext_lazy
 
-from newsletter_registration.models import Subscription
-from newsletter_registration.signals import subscribed, unsubscribed
-from newsletter_registration.utils import (get_signer,
+from newsletter_subscription.models import Subscription
+from newsletter_subscription.signals import subscribed, unsubscribed
+from newsletter_subscription.utils import (get_signer,
     send_subscription_mail, send_unsubscription_mail)
 
 
@@ -98,7 +98,7 @@ def subscribe(request, code, form_class=SubscriptionForm):
 
             return redirect('.')
 
-    else form_class:
+    else:
         form = form_class(instance=subscription)
 
     return render(request, 'newsletter_subscription/subscribe.html', {
