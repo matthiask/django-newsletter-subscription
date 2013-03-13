@@ -86,7 +86,7 @@ def subscribe(request, code, form_class=SubscriptionForm):
             request=request, subscription=subscription)
 
     if form_class is None:
-        return redirect('/')
+        return redirect('newsletter_subscription_form')
 
     elif form_class and request.method == 'POST':
         form = form_class(request.POST, request.FILES, instance=subscription)
