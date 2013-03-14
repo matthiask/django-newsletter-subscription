@@ -8,25 +8,22 @@ Another newsletter subscription app.
 Subscription flow
 =================
 
-- User enters his/her email address.
-- A mail is sent to the given address containing a link.
+- User enters his/her email address on ``/newsletter/``.
+- A mail is sent to the given address containing a link of the form
+  ``/newsletter/s/<signed_email_address>/``.
 - Upon visiting the link the user is immediately subscribed for the newsletter.
   Optionally, a form asking the user for additional data is shown.
-
-- ``/newsletter/``
-- ``/newsletter/s/<signed_data>/``
 
 
 Unsubscription flow
 ===================
 
-- The user enters his/her email address and is immediately unsubscribed.
+- The user enters his/her email address on ``/newsletter/`` and is immediately
+  unsubscribed.
 - An email is sent to the user informing him/her that the unsubscription took
   place. A link is provided to immediately subscribe again in case the
-  unsubscription was not meant to take place.
-
-- ``/newsletter/``
-- ``/newsletter/r/<signed_data>/``
+  unsubscription was not meant to take place. The link is of the form
+  ``/newsletter/r/<signed_email_address>/``.
 
 
 Subscription model
@@ -34,21 +31,22 @@ Subscription model
 
 The minimal set of database fields is as follows:
 
-- ``email`` (unique)
-- ``is_active``
+- ``email`` (``EmailField``, unique)
+- ``is_active`` (``BooleanField``, defaults to ``False``)
 
 
 Usage
 =====
 
-This example assumes you are using a recent version of Django, jQuery and
-Twitter Bootstrap.
+This example assumes you are using at least Django 1.4.
 
 1. Install ``django-newsletter-subscription`` using pip.
 
 2. Add a concrete model inheriting
-   ``newsletter_subscription.models.SubscriptionBase`` or coming with the same
-   fields somewhere in your project.
+   ``newsletter_subscription.models.SubscriptionBase`` with optionally
+   additional fields about the subscription. You should be prepared to work
+   without those additional fields -- their presence is not enforced as per
+   the subscription flow description above.
 
 3. Add the URLconf entry::
 
@@ -63,5 +61,9 @@ Twitter Bootstrap.
               ))),
        )
 
-4. Add ``newsletter_subscription`` to ``INSTALLED_APPS`` if you want to use
-   the bundled templates.
+4. Register your own subscription model with ``django.contrib.admin``.
+
+5. Add ``newsletter_subscription`` to ``INSTALLED_APPS`` if you want to use
+   the bundled templates. The templates require
+   `Towel <https://github.com/matthiask/towel/>`_'s ``towel_form_tags``
+   template tag library.
