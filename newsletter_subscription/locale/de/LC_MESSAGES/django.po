@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-18 11:12+0200\n"
+"POT-Creation-Date: 2013-04-19 15:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,64 +18,86 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: utils.py:72
-msgid "The link is expired. Please request another registration link."
-msgstr "Der Link ist verfallen. Bitte beantragen Sie einen neuen Link."
-
-#: utils.py:77
-msgid "Unable to verify the signature. Please request a new registration link."
-msgstr "Konnte die Signatur nicht verifizieren. Bitte beantragen Sie einen "
-"neuen Link."
-
-#: utils.py:87
-msgid ""
-"Something went wrong while decoding the registration request. Please try "
-"again."
-msgstr "Etwas ist schiefgelaufen. Bitte versuchen Sie es nochmals."
-
-#: views.py:16 views.py:18
-msgid "e-mail address"
+#: models.py:6 views.py:12 views.py:14
+msgid "email address"
 msgstr "Emailadresse"
 
-#: views.py:25
+#: models.py:7
+msgid "is active"
+msgstr "ist aktiv"
+
+#: models.py:11
+msgid "subscription"
+msgstr "Abonnement"
+
+#: models.py:12
+msgid "subscriptions"
+msgstr "Abonnements"
+
+#: views.py:16
+msgid "action"
+msgstr "Aktion"
+
+#: views.py:17
+msgid "subscribe"
+msgstr "anmelden"
+
+#: views.py:18
+msgid "unsubscribe"
+msgstr "abmelden"
+
+#: views.py:37
+msgid "This address is already subscribed to our newsletter."
+msgstr "Diese Adresse ist schon für unseren Newsletter angemeldet."
+
+#: views.py:41
+msgid "This address is not subscribed to our newsletter."
+msgstr "Diese Adresse ist nicht für unseren Newsletter angemeldet."
+
+#: views.py:52
+msgid "You should receive a confirmation email shortly."
+msgstr "Sie erhalten in Kürze ein Bestätigungsmail."
+
+#: views.py:56
+msgid "You have been unsubscribed."
+msgstr "Sie wurden abgemeldet."
+
+#: views.py:81 views.py:109
+msgid "We are sorry. This link is broken."
+msgstr "Tut uns leid. Der Link ist kaputt."
+
+#: views.py:85
+msgid "Your subscription has been activated."
+msgstr "Ihr Abonnement wurde aktiviert."
+
+#: views.py:94
+msgid "Thank you! The subscription details have been updated."
+msgstr "Vielen Dank! Ihre Abonnementsdetails wurden aktualisiert."
+
+#: views.py:114
+msgid "Your subscription is already active."
+msgstr "Ihr Abonnement ist schon aktiv."
+
+#: templates/newsletter_subscription/form.html:4
+#: templates/newsletter_subscription/form.html:8
+#: templates/newsletter_subscription/subscribe.html:4
+#: templates/newsletter_subscription/subscribe.html:8
+msgid "Newsletter"
+msgstr "Newsletter"
+
+#: templates/newsletter_subscription/form.html:21
+msgid "Submit"
+msgstr "Absenden"
+
+#: templates/newsletter_subscription/subscribe.html:14
 msgid ""
-"This e-mail address already exists as an account. Did you want to reset your "
-"password?"
-msgstr "Die Emailadresse existiert schon im System. Wollten Sie Ihr Passwort "
-"zurücksetzen?"
-
-#: views.py:61
-msgid "Successfully set the new password."
-msgstr "Das neue Passwort wurde erfolgreich gesetzt."
-
-#: views.py:72
-msgid "Please set a password."
-msgstr "Bitte setzen Sie ein neues Passwort."
-
-#: views.py:86
-msgid "Successfully created a new user. Please set a password."
-msgstr "Ein Nutzer wurde erfolgreich erstellt. Bitte setzen Sie ein Passwort."
-
-#: templates/registration/email_registration_form.html:10
-#: templates/registration/email_registration_include.html:10
-msgid "Register"
-msgstr "Registrieren"
-
-#: templates/registration/email_registration_include.html:7
-msgid "E-mail address"
-msgstr "Emailadresse"
-
-#: templates/registration/email_registration_sent.html:3
-#, python-format
-msgid ""
-"We sent you an e-mail to %(email)s.\n"
-"  Please click the contained link to finish your registration."
+"You successfully subscribed to our newsletter.\n"
+"  Thanks for filling out the form with additional details."
 msgstr ""
-"Wir haben ein Email an %(email)s verschickt. Bitte besuchen Sie den darin "
-"enthaltenen Link um die Registrierung abzuschliessen."
+"Sie haben sich erfolgreich für unseren Newsletter angemeldet.\n"
+" Vielen Dank im Voraus fürs Ausfüllen dieses Formulars mit"
+" zusätzlichen Angaben."
 
-#: templates/registration/password_set_form.html:4
-#: templates/registration/password_set_form.html:8
-#: templates/registration/password_set_form.html:21
-msgid "Set password"
-msgstr "Passwort setzen"
+#: templates/newsletter_subscription/subscribe.html:23
+msgid "Save"
+msgstr "Sichern"
