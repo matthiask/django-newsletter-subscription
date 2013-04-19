@@ -1,8 +1,8 @@
-Successfully unsubscribed from our newsletter
+{% load i18n %}{% trans "Successfully unsubscribed from our newsletter" %}
 
-You successfully unsubscribed from our newsletter. If you want to
-subscribe again any time, just visit the following link:
+{% blocktrans %}You successfully unsubscribed from our newsletter. If you want to
+subscribe again any time, just visit the following link:{% endblocktrans %}
 
 {{ resubscribe_url }}
 
-Warm regards
+{% trans "Warm regards" %}

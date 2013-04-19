@@ -1,7 +1,7 @@
-Newsletter subscription
+{% load i18n %}{% trans "Newsletter subscription" %}
 
-Visit the following link to confirm the newsletter subscription:
+{% trans "Visit the following link to confirm the newsletter subscription:" %}
 
 {{ subscribe_url }}
 
-Warm regards
+{% trans "Warm regards" %}

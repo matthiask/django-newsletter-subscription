@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-19 15:43+0200\n"
+"POT-Creation-Date: 2013-04-19 15:48+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,9 +95,37 @@ msgid ""
 "  Thanks for filling out the form with additional details."
 msgstr ""
 "Sie haben sich erfolgreich für unseren Newsletter angemeldet.\n"
-" Vielen Dank im Voraus fürs Ausfüllen dieses Formulars mit"
-" zusätzlichen Angaben."
+" Vielen Dank im Voraus fürs Ausfüllen dieses Formulars mit zusätzlichen "
+"Angaben."
 
 #: templates/newsletter_subscription/subscribe.html:23
 msgid "Save"
 msgstr "Sichern"
+
+#: templates/newsletter_subscription/subscription_email.txt:1
+msgid "Newsletter subscription"
+msgstr "Newsletter-Abonnement"
+
+#: templates/newsletter_subscription/subscription_email.txt:3
+msgid "Visit the following link to confirm the newsletter subscription:"
+msgstr ""
+"Bitte besuchen Sie folgenden Link um die Anmeldung für unseren Newsletter"
+" zu bestätigen:"
+
+#: templates/newsletter_subscription/subscription_email.txt:7
+#: templates/newsletter_subscription/unsubscription_email.txt:8
+msgid "Warm regards"
+msgstr "Freundliche Grüsse"
+
+#: templates/newsletter_subscription/unsubscription_email.txt:1
+msgid "Successfully unsubscribed from our newsletter"
+msgstr "Erfolgreich von unserem Newsletter abgemeldet"
+
+#: templates/newsletter_subscription/unsubscription_email.txt:3
+msgid ""
+"You successfully unsubscribed from our newsletter. If you want to\n"
+"subscribe again any time, just visit the following link:"
+msgstr ""
+"Sie haben sich erfolgreich von unserem Newsletter abgemeldet.\n"
+"Bitte besuchen Sie folgenden Link wenn Sie sich irgendwann wieder"
+" anmelden wollen:"
