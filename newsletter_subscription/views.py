@@ -14,8 +14,8 @@ class NewsletterForm(forms.Form):
             'placeholder': ugettext_lazy('email address'),
             }), max_length=254)
     action = forms.ChoiceField(label=ugettext_lazy('action'), choices=(
-        ('subscribe', _('subscribe')),
-        ('unsubscribe', _('unsubscribe')),
+        ('subscribe', ugettext_lazy('subscribe')),
+        ('unsubscribe', ugettext_lazy('unsubscribe')),
         ), widget=forms.RadioSelect, initial='subscribe')
 
     def __init__(self, *args, **kwargs):
