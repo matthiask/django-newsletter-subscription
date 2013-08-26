@@ -24,7 +24,7 @@ class ModelBackend(object):
     def unsubscribe(self, email):
         try:
             subscription = self.model_class.objects.get(email=email)
-        except Subscription.DoesNotExist:
+        except self.model_class.DoesNotExist:
             return
 
         subscription.is_active = False
