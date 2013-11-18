@@ -1,6 +1,6 @@
 from django.core import mail
 from django.test import TestCase
-from django.utils.six.moves.urllib.parse import unquote
+from django.utils.http import urlunquote
 
 from testapp.models import Subscription
 
@@ -18,7 +18,7 @@ class SubscriptionTest(TestCase):
         self.assertEqual(len(mail.outbox), 1)
 
         body = mail.outbox[0].body
-        subscribe_url = unquote([
+        subscribe_url = urlunquote([
             line for line in body.splitlines() if 'testserver' in line][0])
 
         self.assertEqual(Subscription.objects.count(), 0)
@@ -54,7 +54,7 @@ class SubscriptionTest(TestCase):
 
         self.assertEqual(len(mail.outbox), 2)
         body = mail.outbox[1].body
-        resubscribe_url = unquote([
+        resubscribe_url = urlunquote([
             line for line in body.splitlines() if 'testserver' in line][0])
 
         self.assertContains(
