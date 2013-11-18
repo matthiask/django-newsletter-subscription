@@ -1,5 +1,6 @@
 from django.core import mail
 from django.test import TestCase
+from django.utils.six.moves.urllib.parse import unquote
 
 from testapp.models import Subscription
 
@@ -17,8 +18,8 @@ class SubscriptionTest(TestCase):
         self.assertEqual(len(mail.outbox), 1)
 
         body = mail.outbox[0].body
-        subscribe_url = [
-            line for line in body.splitlines() if 'testserver' in line][0]
+        subscribe_url = unquote([
+            line for line in body.splitlines() if 'testserver' in line][0])
 
         self.assertEqual(Subscription.objects.count(), 0)
         response = self.client.get(subscribe_url)
@@ -53,8 +54,8 @@ class SubscriptionTest(TestCase):
 
         self.assertEqual(len(mail.outbox), 2)
         body = mail.outbox[1].body
-        resubscribe_url = [
-            line for line in body.splitlines() if 'testserver' in line][0]
+        resubscribe_url = unquote([
+            line for line in body.splitlines() if 'testserver' in line][0])
 
         self.assertContains(
             self.client.get(resubscribe_url, follow=True),
