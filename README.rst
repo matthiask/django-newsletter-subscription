@@ -4,6 +4,9 @@ django-newsletter-subscription
 
 Another newsletter subscription app.
 
+.. image:: https://travis-ci.org/matthiask/django-newsletter-subscription.png?branch=master
+   :target: https://travis-ci.org/matthiask/django-newsletter-subscription
+
 
 Subscription flow
 =================
