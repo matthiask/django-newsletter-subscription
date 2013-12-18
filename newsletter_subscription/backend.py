@@ -9,12 +9,12 @@ class ModelBackend(object):
         return self.model_class.objects.filter(
             email=email,
             is_active=True,
-            ).exists()
+        ).exists()
 
     def subscribe(self, email):
         subscription, created = self.model_class.objects.get_or_create(
             email=email,
-            )
+        )
         if not subscription.is_active:
             subscription.is_active = True
             subscription.save()
@@ -36,8 +36,9 @@ class ModelBackend(object):
         except self.model_class.DoesNotExist:
             instance = None
 
-        form_class = modelform_factory(self.model_class,
+        form_class = modelform_factory(
+            self.model_class,
             exclude=('email', 'is_active',),
-            )
+        )
 
         return form_class(request.POST or None, instance=instance)

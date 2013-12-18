@@ -4,19 +4,27 @@ from django.core.signing import BadSignature
 from django.shortcuts import redirect, render
 from django.utils.translation import ugettext as _, ugettext_lazy
 
-from newsletter_subscription.utils import (get_signer,
-    send_subscription_mail, send_unsubscription_mail)
+from newsletter_subscription.utils import (
+    get_signer, send_subscription_mail, send_unsubscription_mail)
 
 
 class NewsletterForm(forms.Form):
-    email = forms.EmailField(label=ugettext_lazy('email address'),
+    email = forms.EmailField(
+        label=ugettext_lazy('email address'),
+        max_length=254,
         widget=forms.TextInput(attrs={
             'placeholder': ugettext_lazy('email address'),
-            }), max_length=254)
-    action = forms.ChoiceField(label=ugettext_lazy('action'), choices=(
-        ('subscribe', ugettext_lazy('subscribe')),
-        ('unsubscribe', ugettext_lazy('unsubscribe')),
-        ), widget=forms.RadioSelect, initial='subscribe')
+        }),
+    )
+    action = forms.ChoiceField(
+        label=ugettext_lazy('action'),
+        choices=(
+            ('subscribe', ugettext_lazy('subscribe')),
+            ('unsubscribe', ugettext_lazy('unsubscribe')),
+        ),
+        widget=forms.RadioSelect,
+        initial='subscribe',
+    )
 
     def __init__(self, *args, **kwargs):
         self.backend = kwargs.pop('backend')
@@ -48,7 +56,8 @@ class NewsletterForm(forms.Form):
 
         if action == 'subscribe':
             send_subscription_mail(email, self.request)
-            messages.success(self.request,
+            messages.success(
+                self.request,
                 _('You should receive a confirmation email shortly.'))
         else:
             self.backend.unsubscribe(email)
@@ -57,13 +66,14 @@ class NewsletterForm(forms.Form):
 
 
 def form(request, backend):
-    form = NewsletterForm(request.POST or None,
+    form = NewsletterForm(
+        request.POST or None,
         backend=backend,
         request=request,
         initial={
             'email': request.user.email,
-            } if request.user.is_authenticated() else None,
-        )
+        } if request.user.is_authenticated() else None,
+    )
 
     if request.method == 'POST' and form.is_valid():
         form.process()
@@ -71,7 +81,7 @@ def form(request, backend):
 
     return render(request, 'newsletter_subscription/form.html', {
         'form': form,
-        })
+    })
 
 
 def subscribe(request, code, backend):
@@ -90,7 +100,8 @@ def subscribe(request, code, backend):
 
     elif request.method == 'POST':
         if form.is_valid():
-            messages.success(request,
+            messages.success(
+                request,
                 _('Thank you! The subscription details have been updated.'))
             form.save()
 
@@ -99,7 +110,7 @@ def subscribe(request, code, backend):
     return render(request, 'newsletter_subscription/subscribe.html', {
         'email': email,
         'form': form,
-        })
+    })
 
 
 def resubscribe(request, code, backend):
@@ -110,7 +121,7 @@ def resubscribe(request, code, backend):
         return redirect('newsletter_subscription_form')
 
     if backend.is_subscribed(email):
-        messages.info(request,
-            _('Your subscription is already active.'))
+        messages.info(
+            request, _('Your subscription is already active.'))
 
     return redirect('newsletter_subscription_subscribe', code=code)

@@ -10,7 +10,8 @@ from .models import Subscription
 admin.autodiscover()
 
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^admin/', include(admin.site.urls)),
     url(r'^newsletter/', include(newsletter_subscriptions_urlpatterns(
         backend=ModelBackend(Subscription),
