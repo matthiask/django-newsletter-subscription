@@ -1,4 +1,3 @@
-from django.contrib.sites.models import get_current_site
 from django.core import signing
 from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse
@@ -32,37 +31,35 @@ def send_subscription_mail(email, request):
       and is not required either.
     """
 
-    url = reverse('newsletter_subscription_subscribe', kwargs={
-        'code': get_signer().sign(email),
-        })
+    url = request.build_absolute_uri(
+        reverse('newsletter_subscription_subscribe', kwargs={
+            'code': get_signer().sign(email),
+        }))
 
-    url = '%s://%s%s' % (
-        request.is_secure() and 'https' or 'http',
-        get_current_site(request).domain,
-        url)
-
-    render_to_mail('newsletter_subscription/subscription_email', {
-        'subscribe_url': url,
+    render_to_mail(
+        'newsletter_subscription/subscription_email',
+        {
+            'subscribe_url': url,
         },
         to=[email],
-        ).send()
+    ).send()
 
 
 def send_unsubscription_mail(email, request):
-    url = reverse('newsletter_subscription_resubscribe', kwargs={
-        'code': get_signer().sign(email),
-        })
+    url = request.build_absolute_uri(
+        reverse(
+            'newsletter_subscription_resubscribe',
+            kwargs={
+                'code': get_signer().sign(email),
+            }))
 
-    url = '%s://%s%s' % (
-        request.is_secure() and 'https' or 'http',
-        get_current_site(request).domain,
-        url)
-
-    render_to_mail('newsletter_subscription/unsubscription_email', {
-        'resubscribe_url': url,
+    render_to_mail(
+        'newsletter_subscription/unsubscription_email',
+        {
+            'resubscribe_url': url,
         },
         to=[email],
-        ).send()
+    ).send()
 
 
 def render_to_mail(template, context, **kwargs):
