@@ -1,4 +1,5 @@
-{% load i18n %}{% trans "Newsletter subscription" %}
+{% load i18n %}
+{% trans "Newsletter subscription" %}
 
 {% trans "Visit the following link to confirm the newsletter subscription:" %}
 
