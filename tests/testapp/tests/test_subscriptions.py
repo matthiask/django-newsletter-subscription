@@ -2,9 +2,8 @@ from django.core import mail
 from django.test import TestCase
 from django.utils.http import urlunquote
 
-from newsletter_subscription.backend import ModelBackend
-
 from testapp.models import Subscription
+from testapp.urls import TestModelBackend
 
 
 class MockRequest(object):
@@ -56,6 +55,14 @@ class SubscriptionTest(TestCase):
             status_code=200)
 
         self.assertContains(response, 'id="id_full_name"')
+        response = self.client.post(subscribe_url, {
+            'full_name': '',
+        })
+        self.assertContains(
+            response,
+            'This field is required.',
+            1)
+
         response = self.client.post(subscribe_url, {
             'full_name': 'Hans Muster',
         })
@@ -113,7 +120,7 @@ class SubscriptionTest(TestCase):
             status_code=200)
 
     def test_backend(self):
-        backend = ModelBackend(Subscription)
+        backend = TestModelBackend(Subscription)
 
         # Not subscribed yet.
         self.assertFalse(backend.is_subscribed('test@example.com'))
@@ -137,8 +144,9 @@ class SubscriptionTest(TestCase):
         # Does not exist, silent failure
         self.assertEqual(None, backend.unsubscribe('test22@example.com'))
 
-        # Yes, also on inactive subscriptions. Does this make sense? Why
-        # should we not allow this?
+        subscription.is_active = True
+        subscription.save()
+
         form = backend.subscription_details_form(
             'test@example.com', MockRequest())
         self.assertEqual(
@@ -148,6 +156,24 @@ class SubscriptionTest(TestCase):
         # That is the current behavior.
         form = backend.subscription_details_form(
             'test22@example.com', MockRequest())
+        self.assertEqual(None, form)
+
+    def test_42(self):
+        response = self.client.post('/newsletter/', {
+            'email': 'test42@example.com',
+            'action': 'subscribe',
+            })
+        self.assertRedirects(response, '/newsletter/')
+        self.assertEqual(len(mail.outbox), 1)
+
+        body = mail.outbox[0].body
+        subscribe_url = urlunquote([
+            line for line in body.splitlines() if 'testserver' in line][0])
+
+        self.assertEqual(Subscription.objects.count(), 0)
+        response = self.client.get(subscribe_url)
+        self.assertRedirects(
+            response,
+            'http://testserver/newsletter/')
         self.assertEqual(
-            ['full_name'],
-            list(form.fields.keys()))
+            Subscription.objects.filter(is_active=True).count(), 1)
