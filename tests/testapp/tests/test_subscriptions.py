@@ -2,13 +2,34 @@ from django.core import mail
 from django.test import TestCase
 from django.utils.http import urlunquote
 
+from newsletter_subscription.backend import ModelBackend
+
 from testapp.models import Subscription
 
 
+class MockRequest(object):
+    GET = {}
+    POST = {}
+
+
 class SubscriptionTest(TestCase):
+    def test_model(self):
+        model = Subscription.objects.create(email='blasdasd@asdasd.ch')
+        self.assertEqual(
+            str(model),
+            'blasdasd@asdasd.ch')
+
     def test_subscription(self):
-        self.client.get('/newsletter/')
-        pass
+        self.assertContains(
+            self.client.get('/newsletter/'),
+            'id="id_email"',
+            1)
+
+        response = self.client.post('/newsletter/', {
+            'email': '',
+            'action': 'subscribe',
+        })
+        self.assertEqual(response.status_code, 200)
 
         response = self.client.post('/newsletter/', {
             'email': 'test@example.com',
@@ -26,10 +47,18 @@ class SubscriptionTest(TestCase):
         self.assertEqual(
             Subscription.objects.filter(is_active=True).count(), 1)
 
+        self.assertContains(
+            self.client.get(
+                subscribe_url.replace('com:', 'ch:'),
+                follow=True,
+            ),
+            'We are sorry. This link is broken.',
+            status_code=200)
+
         self.assertContains(response, 'id="id_full_name"')
         response = self.client.post(subscribe_url, {
             'full_name': 'Hans Muster',
-            })
+        })
 
         self.assertRedirects(response, subscribe_url)
         subscription = Subscription.objects.get()
@@ -52,6 +81,13 @@ class SubscriptionTest(TestCase):
         self.assertEqual(
             Subscription.objects.filter(is_active=True).count(), 0)
 
+        self.assertContains(
+            self.client.post('/newsletter/', {
+                'email': 'test@example.com',
+                'action': 'unsubscribe',
+            }, follow=False),
+            'This address is not subscribed to our newsletter.')
+
         self.assertEqual(len(mail.outbox), 2)
         body = mail.outbox[1].body
         resubscribe_url = urlunquote([
@@ -66,3 +102,52 @@ class SubscriptionTest(TestCase):
         self.assertContains(
             self.client.get(resubscribe_url, follow=True),
             'Your subscription is already active.')
+
+        self.assertContains(
+            self.client.get(
+                # Purposefully break the link.
+                resubscribe_url.replace('com:', 'ch:'),
+                follow=True,
+            ),
+            'We are sorry. This link is broken.',
+            status_code=200)
+
+    def test_backend(self):
+        backend = ModelBackend(Subscription)
+
+        # Not subscribed yet.
+        self.assertFalse(backend.is_subscribed('test@example.com'))
+
+        # Subscribe.
+        self.assertTrue(backend.subscribe('test@example.com'))
+
+        # Already subscribed.
+        self.assertFalse(backend.subscribe('test@example.com'))
+
+        subscription = Subscription.objects.get()
+        self.assertEqual(subscription.email, 'test@example.com')
+        self.assertTrue(subscription.is_active)
+
+        # Unsubscribe
+        self.assertEqual(None, backend.unsubscribe('test@example.com'))
+
+        subscription = Subscription.objects.get()
+        self.assertFalse(subscription.is_active)
+
+        # Does not exist, silent failure
+        self.assertEqual(None, backend.unsubscribe('test22@example.com'))
+
+        # Yes, also on inactive subscriptions. Does this make sense? Why
+        # should we not allow this?
+        form = backend.subscription_details_form(
+            'test@example.com', MockRequest())
+        self.assertEqual(
+            ['full_name'],
+            list(form.fields.keys()))
+
+        # That is the current behavior.
+        form = backend.subscription_details_form(
+            'test22@example.com', MockRequest())
+        self.assertEqual(
+            ['full_name'],
+            list(form.fields.keys()))
