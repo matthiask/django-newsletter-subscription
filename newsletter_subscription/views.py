@@ -77,7 +77,7 @@ def form(request, backend):
 
     if request.method == 'POST' and form.is_valid():
         form.process()
-        return redirect('.')
+        return redirect(request.path)
 
     return render(request, 'newsletter_subscription/form.html', {
         'form': form,
@@ -105,7 +105,7 @@ def subscribe(request, code, backend):
                 _('Thank you! The subscription details have been updated.'))
             form.save()
 
-            return redirect('.')
+            return redirect(request.path)
 
     return render(request, 'newsletter_subscription/subscribe.html', {
         'email': email,
