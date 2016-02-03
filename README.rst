@@ -82,3 +82,9 @@ This example assumes you are using at least Django 1.4.
    the bundled templates. The templates require
    `Towel <https://github.com/matthiask/towel/>`_'s ``towel_form_tags``
    template tag library.
+
+6. Ensure that Django's
+   `messages framework <https://docs.djangoproject.com/en/1.9/ref/contrib/messages/>`_
+   is activated and that the messages are included in your templates, otherwise
+   ``django-newsletter-subscriptions``s notifications will not be shown to the
+   users.
