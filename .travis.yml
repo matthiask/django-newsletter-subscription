@@ -5,9 +5,11 @@ python:
 env:
   - REQ="Django>=1.8,<1.9"
   - REQ="Django>=1.9,<1.10"
+  - REQ="Django>=1.10,<1.11"
+  - REQ="Django>=1.11,<2.0"
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
-  - pip install -q $REQ towel==0.8.0
-  - python setup.py -q install
+  - pip install -q $REQ towel flake8
+  - python setup.py install
 # command to run tests, e.g. python setup.py test
-script: "cd tests && ./manage.py test testapp"
+script: "cd tests && ./manage.py test testapp && cd .. && flake8 ."

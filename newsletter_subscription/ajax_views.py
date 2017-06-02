@@ -1,9 +1,10 @@
 from django.http import JsonResponse
-from newsletter_subscription.utils import send_subscription_mail
 from django.core.validators import validate_email
 from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext as _
+
+from newsletter_subscription.utils import send_subscription_mail
 
 
 @require_POST

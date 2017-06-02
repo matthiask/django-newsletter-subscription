@@ -1,7 +1,8 @@
 from django.conf.urls import url
 
-from newsletter_subscription.views import form, subscribe, resubscribe
 from newsletter_subscription.ajax_views import ajax_subscribe
+from newsletter_subscription.views import form, subscribe, resubscribe
+
 
 def newsletter_subscriptions_urlpatterns(**kwargs):
     return [
