@@ -184,14 +184,14 @@ class SubscriptionTest(TestCase):
                 'subscription_email': email
 
             })
-            self.assertContains(response, 'invalid email')
+            self.assertContains(response, 'Invalid email')
 
         response = self.client.post('/newsletter/ajax_subscribe/', {
                 'subscription_email': 'test@example.com'
 
         })
         self.assertContains(response,
-                            'You should receive a confirmation email.')
+                            'You should receive a confirmation email shortly')
         self.assertEqual(len(mail.outbox), 1)
 
         body = mail.outbox[0].body
