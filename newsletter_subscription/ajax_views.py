@@ -13,11 +13,11 @@ def ajax_subscribe(request, backend):
     try:
         validate_email(email)
     except ValidationError:
-        return JsonResponse({'message': _('Invalid email')})
+        return JsonResponse({'error': _('Invalid email')})
 
     if backend.is_subscribed(email):
         return JsonResponse({
-            'message': _(
+            'error': _(
                 'This address is already subscribed to our newsletter.'
             )
         })
@@ -25,5 +25,5 @@ def ajax_subscribe(request, backend):
     send_subscription_mail(email, request)
 
     return JsonResponse({
-        'message': _('You should receive a confirmation email shortly.')
+        'success': _('You should receive a confirmation email shortly.')
     })
