@@ -177,3 +177,34 @@ class SubscriptionTest(TestCase):
             'http://testserver/newsletter/')
         self.assertEqual(
             Subscription.objects.filter(is_active=True).count(), 1)
+
+    def test_ajax_subscription(self):
+        for email in ['', 'mnwr@@ewrwer.com', '@']:
+            response = self.client.post('/newsletter/ajax_subscribe/', {
+                'subscription_email': email
+
+            })
+            self.assertContains(response, 'invalid email')
+
+        response = self.client.post('/newsletter/ajax_subscribe/', {
+                'subscription_email': 'test@example.com'
+
+        })
+        self.assertContains(response,
+                            'You should receive a confirmation email.')
+        self.assertEqual(len(mail.outbox), 1)
+
+        body = mail.outbox[0].body
+        subscribe_url = urlunquote([
+            line for line in body.splitlines() if 'testserver' in line][0])
+
+        self.assertEqual(Subscription.objects.count(), 0)
+        response = self.client.get(subscribe_url)
+        self.assertEqual(
+            Subscription.objects.filter(is_active=True).count(), 1)
+
+        response = self.client.post('/newsletter/ajax_subscribe/', {
+                'subscription_email': 'test@example.com'
+
+        })
+        self.assertContains(response, 'already subscribed')
