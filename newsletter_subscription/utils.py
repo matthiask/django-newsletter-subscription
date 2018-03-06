@@ -1,7 +1,10 @@
 from django.core import signing
 from django.core.mail import EmailMultiAlternatives
-from django.core.urlresolvers import reverse
 from django.template.loader import TemplateDoesNotExist, render_to_string
+try:
+    from django.urls import reverse
+except ImportError:  # pragma: no cover
+    from django.core.urlresolvers import reverse
 
 
 def get_signer(salt='newsletter_subscription'):

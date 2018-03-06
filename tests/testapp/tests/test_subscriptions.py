@@ -67,7 +67,10 @@ class SubscriptionTest(TestCase):
             'full_name': 'Hans Muster',
         })
 
-        self.assertRedirects(response, subscribe_url)
+        self.assertRedirects(
+            response,
+            subscribe_url.replace('http://testserver', ''),
+        )
         subscription = Subscription.objects.get()
         self.assertTrue(subscription.is_active)
         self.assertEqual(subscription.email, 'test@example.com')
@@ -174,7 +177,7 @@ class SubscriptionTest(TestCase):
         response = self.client.get(subscribe_url)
         self.assertRedirects(
             response,
-            'http://testserver/newsletter/')
+            '/newsletter/')
         self.assertEqual(
             Subscription.objects.filter(is_active=True).count(), 1)
 

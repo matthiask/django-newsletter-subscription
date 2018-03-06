@@ -72,7 +72,7 @@ def form(request, backend):
         request=request,
         initial={
             'email': request.user.email,
-        } if request.user.is_authenticated() else None,
+        } if request.user.is_authenticated else None,
     )
 
     if request.method == 'POST' and form.is_valid():
