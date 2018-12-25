@@ -49,8 +49,10 @@ This example assumes you are using at least Django 1.4.
    ``newsletter_subscription.models.SubscriptionBase`` with optionally
    additional fields about the subscription. You should be prepared to work
    without those additional fields -- their presence is not enforced as per
-   the subscription flow description above. A full example::
+   the subscription flow description above. A full example:
 
+   .. code-block:: python
+   
         from django.db import models
         from django.utils.translation import ugettext_lazy as _
 
@@ -59,8 +61,10 @@ This example assumes you are using at least Django 1.4.
         class Subscription(SubscriptionBase):
             full_name = models.CharField(_('full name'), max_length=100, blank=True)
 
-3. Add the URLconf entry::
+3. Add the URLconf entry:
 
+   .. code-block:: python
+   
         from .newsletter.models import Subscription
 
         from newsletter_subscription.backend import ModelBackend
