@@ -1,13 +1,15 @@
 from django.core import signing
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import TemplateDoesNotExist, render_to_string
+
+
 try:
     from django.urls import reverse
 except ImportError:  # pragma: no cover
     from django.core.urlresolvers import reverse
 
 
-def get_signer(salt='newsletter_subscription'):
+def get_signer(salt="newsletter_subscription"):
     """
     Returns the signer instance used to sign and unsign the registration
     link tokens
@@ -35,14 +37,18 @@ def send_subscription_mail(email, request):
     """
 
     url = request.build_absolute_uri(
-        reverse('newsletter_subscription_subscribe', kwargs={
-            'code': get_signer().sign(email),
-        }))
+        reverse(
+            "newsletter_subscription_subscribe",
+            kwargs={
+                "code": get_signer().sign(email),
+            },
+        )
+    )
 
     render_to_mail(
-        'newsletter_subscription/subscription_email',
+        "newsletter_subscription/subscription_email",
         {
-            'subscribe_url': url,
+            "subscribe_url": url,
         },
         to=[email],
     ).send()
@@ -51,15 +57,17 @@ def send_subscription_mail(email, request):
 def send_unsubscription_mail(email, request):
     url = request.build_absolute_uri(
         reverse(
-            'newsletter_subscription_resubscribe',
+            "newsletter_subscription_resubscribe",
             kwargs={
-                'code': get_signer().sign(email),
-            }))
+                "code": get_signer().sign(email),
+            },
+        )
+    )
 
     render_to_mail(
-        'newsletter_subscription/unsubscription_email',
+        "newsletter_subscription/unsubscription_email",
         {
-            'resubscribe_url': url,
+            "resubscribe_url": url,
         },
         to=[email],
     ).send()
@@ -87,22 +95,22 @@ def render_to_mail(template, context, **kwargs):
         message = render_to_mail('myproject/hello_mail', {}, to=[email])
         message.send()
     """
-    lines = iter(render_to_string('%s.txt' % template, context).splitlines())
+    lines = iter(render_to_string("%s.txt" % template, context).splitlines())
 
-    subject = u''
+    subject = ""
     while True:
         line = next(lines)
         if line:
             subject = line
             break
 
-    body = u'\n'.join(lines).strip('\n')
+    body = "\n".join(lines).strip("\n")
     message = EmailMultiAlternatives(subject=subject, body=body, **kwargs)
 
     try:
         message.attach_alternative(
-            render_to_string('%s.html' % template, context),
-            'text/html')
+            render_to_string("%s.html" % template, context), "text/html"
+        )
     except TemplateDoesNotExist:
         pass
 

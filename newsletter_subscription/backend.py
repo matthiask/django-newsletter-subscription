@@ -1,7 +1,7 @@
 from django.forms.models import modelform_factory
 
 
-class ModelBackend(object):
+class ModelBackend:
     def __init__(self, model_class):
         self.model_class = model_class
 
@@ -38,7 +38,10 @@ class ModelBackend(object):
 
         form_class = modelform_factory(
             self.model_class,
-            exclude=('email', 'is_active',),
+            exclude=(
+                "email",
+                "is_active",
+            ),
         )
 
         return form_class(request.POST or None, instance=instance)

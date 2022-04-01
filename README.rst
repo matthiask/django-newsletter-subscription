@@ -52,7 +52,7 @@ This example assumes you are using at least Django 1.4.
    the subscription flow description above. A full example:
 
    .. code-block:: python
-   
+
         from django.db import models
         from django.utils.translation import ugettext_lazy as _
 
@@ -64,7 +64,7 @@ This example assumes you are using at least Django 1.4.
 3. Add the URLconf entry:
 
    .. code-block:: python
-   
+
         from .newsletter.models import Subscription
 
         from newsletter_subscription.backend import ModelBackend

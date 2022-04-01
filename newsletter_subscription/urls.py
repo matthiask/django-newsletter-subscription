@@ -1,34 +1,33 @@
-from django.conf.urls import url
+from django.urls import path
 
 from newsletter_subscription.ajax_views import ajax_subscribe
-from newsletter_subscription.views import form, subscribe, resubscribe
+from newsletter_subscription.views import form, resubscribe, subscribe
 
 
 def newsletter_subscriptions_urlpatterns(**kwargs):
     return [
-        url(
-            r'^$',
+        path(
+            "",
             form,
             kwargs,
-            name='newsletter_subscription_form',
+            name="newsletter_subscription_form",
         ),
-        url(
-            r'^s/(?P<code>[^/]+)/$',
+        path(
+            "s/<str:code>/",
             subscribe,
             kwargs,
-            name='newsletter_subscription_subscribe',
+            name="newsletter_subscription_subscribe",
         ),
-        url(
-            r'^r/(?P<code>[^/]+)/$',
+        path(
+            "r/<str:code>/",
             resubscribe,
             kwargs,
-            name='newsletter_subscription_resubscribe',
+            name="newsletter_subscription_resubscribe",
         ),
-
-        url(
-            r'^ajax_subscribe/$',
+        path(
+            "ajax_subscribe/",
             ajax_subscribe,
             kwargs,
-            name='newsletter_subscription_ajax_subscribe',
+            name="newsletter_subscription_ajax_subscribe",
         ),
     ]
