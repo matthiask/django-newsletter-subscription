@@ -88,7 +88,7 @@ This example assumes you are using at least Django 1.4.
    template tag library.
 
 6. Ensure that Django's
-   `messages framework <https://docs.djangoproject.com/en/1.9/ref/contrib/messages/>`_
+   `messages framework <https://docs.djangoproject.com/en/1.9/ref/contrib/messages/>`__
    is activated and that the messages are included in your templates, otherwise
-   ``django-newsletter-subscriptions``s notifications will not be shown to the
+   the notifications from ``django-newsletter-subscriptions`` will not be shown to the
    users.
